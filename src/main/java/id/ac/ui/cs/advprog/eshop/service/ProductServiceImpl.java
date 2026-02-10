@@ -15,6 +15,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(Product product) {
+        if (product == null) {
+            return null;
+        }
+        if (!isValidName(product.getProductName())) {
+            return null;
+        }
+        if (!isValidQuantity(product.getProductQuantity())) {
+            return null;
+        }
         productRepository.create(product);
         return product;
     }
@@ -37,6 +46,9 @@ public class ProductServiceImpl implements ProductService {
         if (product == null) {
             return null;
         }
+        if (!isValidName(product.getProductName())) {
+            return null;
+        }
         if (!isValidQuantity(product.getProductQuantity())) {
             return null;
         }
@@ -46,6 +58,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean deleteById(String productId) {
         return productRepository.deleteById(productId);
+    }
+
+    private boolean isValidName(String productName) {
+        return productName != null && !productName.trim().isEmpty();
     }
 
     private boolean isValidQuantity(int productQuantity) {
