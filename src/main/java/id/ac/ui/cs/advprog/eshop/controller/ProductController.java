@@ -22,8 +22,12 @@ public class ProductController {
 
     @PostMapping("/create")
     public String createProductPost(@ModelAttribute Product product, Model model) {
-        service.create(product);
-        return "redirect:list";
+        Product createdProduct = service.create(product);
+        if (createdProduct == null) {
+            model.addAttribute("errorMessage", "Product ID must be a unique integer and quantity must be a positive integer.");
+            return "createProduct";
+        }
+        return "redirect:/product/list";
     }
 
     @GetMapping("/list")
@@ -37,21 +41,25 @@ public class ProductController {
     public String editProductPage(@PathVariable("id") String productId, Model model) {
         Product product = service.findById(productId);
         if (product == null) {
-            return "redirect:list";
+            return "redirect:/product/list";
         }
         model.addAttribute("product", product);
         return "editProduct";
     }
 
     @PostMapping("/edit")
-    public String editProductPost(@ModelAttribute Product product) {
-        service.update(product);
-        return "redirect:list";
+    public String editProductPost(@ModelAttribute Product product, Model model) {
+        Product updatedProduct = service.update(product);
+        if (updatedProduct == null) {
+            model.addAttribute("errorMessage", "Product ID must be a unique integer and quantity must be a positive integer.");
+            return "editProduct";
+        }
+        return "redirect:/product/list";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable("id") String productId) {
         service.deleteById(productId);
-        return "redirect:list";
+        return "redirect:/product/list";
     }
 }

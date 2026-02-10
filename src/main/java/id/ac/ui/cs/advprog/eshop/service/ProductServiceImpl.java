@@ -15,6 +15,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(Product product) {
+        if (product == null) {
+            return null;
+        }
+        String productId = normalizeProductId(product.getProductId());
+        if (!isValidProductId(productId)) {
+            return null;
+        }
+        if (!isValidQuantity(product.getProductQuantity())) {
+            return null;
+        }
+        if (productRepository.findById(productId) != null) {
+            return null;
+        }
+        product.setProductId(productId);
         productRepository.create(product);
         return product;
     }
@@ -33,12 +47,38 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product update(Product product) {
+        if (product == null) {
+            return null;
+        }
+        String productId = normalizeProductId(product.getProductId());
+        if (!isValidProductId(productId)) {
+            return null;
+        }
+        if (!isValidQuantity(product.getProductQuantity())) {
+            return null;
+        }
+        product.setProductId(productId);
         return productRepository.update(product);
     }
 
     @Override
     public boolean deleteById(String productId) {
         return productRepository.deleteById(productId);
+    }
+
+    private String normalizeProductId(String productId) {
+        if (productId == null) {
+            return null;
+        }
+        return productId.trim();
+    }
+
+    private boolean isValidProductId(String productId) {
+        return productId != null && productId.matches("\\d+");
+    }
+
+    private boolean isValidQuantity(int productQuantity) {
+        return productQuantity > 0 ;
     }
 
 }
