@@ -12,17 +12,14 @@
     <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
     <form th:action="@{/product/edit}" th:object="${product}" method="post">
-        <div class="form-group">
-            <label for="idInput">ID</label>
-            <input th:field="*{productId}" type="number" class="form-control mb-4 col-4" id="idInput" readonly>
-        </div>
+        <input th:field="*{productId}" type="hidden">
         <div class="form-group">
             <label for="nameInput">Name</label>
-            <input th:field="*{productName}" type="text" class="form-control mb-4 col-4" id="nameInput" placeholder="Enter product' name">
+            <input th:field="*{productName}" type="text" class="form-control mb-4 col-4" id="nameInput" placeholder="Enter product' name" required>
         </div>
         <div class="form-group">
             <label for="quantityInput">Quantity</label>
-            <input th:field="*{productQuantity}" type="number" class="form-control mb-4 col-4" id="quantityInput" placeholder="Enter product' name">
+            <input th:field="*{productQuantity}" type="number" class="form-control mb-4 col-4" id="quantityInput" placeholder="Enter product' name" min="1" required>
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
         <a th:href="@{/product/list}" class="btn btn-secondary">Cancel</a>

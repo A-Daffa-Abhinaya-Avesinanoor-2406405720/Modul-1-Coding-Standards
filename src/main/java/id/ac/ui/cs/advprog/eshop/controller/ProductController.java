@@ -24,7 +24,7 @@ public class ProductController {
     public String createProductPost(@ModelAttribute Product product, Model model) {
         Product createdProduct = service.create(product);
         if (createdProduct == null) {
-            model.addAttribute("errorMessage", "Product ID must be a unique integer and quantity must be a positive integer.");
+            model.addAttribute("errorMessage", "Product name must not be empty and quantity must be a positive integer.");
             return "createProduct";
         }
         return "redirect:/product/list";
@@ -51,7 +51,7 @@ public class ProductController {
     public String editProductPost(@ModelAttribute Product product, Model model) {
         Product updatedProduct = service.update(product);
         if (updatedProduct == null) {
-            model.addAttribute("errorMessage", "Product ID must be a unique integer and quantity must be a positive integer.");
+            model.addAttribute("errorMessage", "Product name must not be empty and quantity must be a positive integer.");
             return "editProduct";
         }
         return "redirect:/product/list";

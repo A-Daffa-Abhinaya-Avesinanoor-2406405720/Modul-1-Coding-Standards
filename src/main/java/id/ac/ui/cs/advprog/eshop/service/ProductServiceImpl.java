@@ -18,22 +18,18 @@ public class ProductServiceImpl implements ProductService {
         if (product == null) {
             return null;
         }
-        String productId = normalizeProductId(product.getProductId());
-        if (!isValidProductId(productId)) {
+        if (!isValidName(product.getProductName())) {
             return null;
         }
         if (!isValidQuantity(product.getProductQuantity())) {
             return null;
         }
-        if (productRepository.findById(productId) != null) {
-            return null;
-        }
-        product.setProductId(productId);
         productRepository.create(product);
         return product;
     }
+
     @Override
-    public List<Product> findAll () {
+    public List<Product> findAll() {
         Iterator<Product> productIterator = productRepository.findAll();
         List<Product> allProduct = new ArrayList<>();
         productIterator.forEachRemaining(allProduct::add);
@@ -50,14 +46,12 @@ public class ProductServiceImpl implements ProductService {
         if (product == null) {
             return null;
         }
-        String productId = normalizeProductId(product.getProductId());
-        if (!isValidProductId(productId)) {
+        if (!isValidName(product.getProductName())) {
             return null;
         }
         if (!isValidQuantity(product.getProductQuantity())) {
             return null;
         }
-        product.setProductId(productId);
         return productRepository.update(product);
     }
 
@@ -66,19 +60,12 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.deleteById(productId);
     }
 
-    private String normalizeProductId(String productId) {
-        if (productId == null) {
-            return null;
-        }
-        return productId.trim();
-    }
-
-    private boolean isValidProductId(String productId) {
-        return productId != null && productId.matches("\\d+");
+    private boolean isValidName(String productName) {
+        return productName != null && !productName.trim().isEmpty();
     }
 
     private boolean isValidQuantity(int productQuantity) {
-        return productQuantity > 0 ;
+        return productQuantity > 0;
     }
 
 }
