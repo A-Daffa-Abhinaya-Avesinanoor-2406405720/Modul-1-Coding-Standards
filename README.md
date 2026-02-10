@@ -2,3 +2,8 @@
 
 Saya sudah menerapkan clean code dengan menerapkan penamaan kelas, method, dan variabel yang deskriptif dan memfokuskan method pada suatu tugas sehingga mudah dipahami dan di-maintain untuk kedepannya. Saya juga menerapkan konsistensi penamaan dan pemisahan concern. Menurut saya, source code yang diberikan memiliki kekurangan karena belum ada validasi input, misalnya pada variable productQuantity. Saya menambahkan validasi ketika input productQuantity pada CreateProduct.html supaya jumlahnya harus integer positif dengan menambahkan method validasi di ProductServiceImpl.java dan memunculkan pesan error jika tidak valid di ProductController.java.
 
+# Refleksi 2
+
+Menurut saya, jumlah unit test di suatu kelas tidak ditentukan angka coverage, tetapi yang penting mencakup skenario utama, edge case, dan kondisi gagal. Kecukupan test bisa dibantu dengan code coverage, namun coverage tinggi hanya menunjukkan baris yang dijalankan, bukan jaminan kodenya bebas bug atau logikanya. Jadi 100% coverage tetap bisa memiliki error jika assert-nya lemah atau skenario penting belum diuji.
+
+Jika membuat functional test baru untuk menghitung jumlah item list dengan setup yang sama seperti test sebelumnya, codenya bisa tidak jadi clean code karena banyak duplikat dan magic string. Hal ini membuat code sulit di-maintain ketika UI berubah, dan meningkatkan risiko timing, element selector atau delay. Fix yang bisa dilakukan adalah membuat helper method atau Page Object untuk setup atau menyimpan URL dalam constant, dan menggunakan explicit wait yang konsisten. Dengan cara itu, kode test bisa lebih menjadi clean code.
