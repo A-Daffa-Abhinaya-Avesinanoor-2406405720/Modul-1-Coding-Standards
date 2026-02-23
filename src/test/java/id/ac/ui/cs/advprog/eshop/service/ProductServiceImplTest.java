@@ -47,6 +47,26 @@ class ProductServiceImplTest {
     }
 
     @Test
+    void create_whenNameNull_returnsNull() {
+        Product product = new Product();
+        product.setProductName(null);
+        product.setProductQuantity(1);
+
+        assertNull(productService.create(product));
+        verifyNoInteractions(productRepository);
+    }
+
+    @Test
+    void create_whenNameEmpty_returnsNull() {
+        Product product = new Product();
+        product.setProductName("");
+        product.setProductQuantity(1);
+
+        assertNull(productService.create(product));
+        verifyNoInteractions(productRepository);
+    }
+
+    @Test
     void create_whenQuantityInvalid_returnsNull() {
         Product product = new Product();
         product.setProductName("Valid Name");
@@ -61,6 +81,21 @@ class ProductServiceImplTest {
         Product product = new Product();
         product.setProductId("p-1");
         product.setProductName("Valid Name");
+        product.setProductQuantity(5);
+
+        when(productRepository.create(product)).thenReturn(product);
+
+        Product result = productService.create(product);
+
+        assertSame(product, result);
+        verify(productRepository).create(product);
+    }
+
+    @Test
+    void create_whenNameHasSpaces_callsRepository() {
+        Product product = new Product();
+        product.setProductId("p-1");
+        product.setProductName("  Valid Name  ");
         product.setProductQuantity(5);
 
         when(productRepository.create(product)).thenReturn(product);
@@ -111,6 +146,26 @@ class ProductServiceImplTest {
     void update_whenNameBlank_returnsNull() {
         Product product = new Product();
         product.setProductName(" ");
+        product.setProductQuantity(2);
+
+        assertNull(productService.update(product));
+        verifyNoInteractions(productRepository);
+    }
+
+    @Test
+    void update_whenNameNull_returnsNull() {
+        Product product = new Product();
+        product.setProductName(null);
+        product.setProductQuantity(2);
+
+        assertNull(productService.update(product));
+        verifyNoInteractions(productRepository);
+    }
+
+    @Test
+    void update_whenNameEmpty_returnsNull() {
+        Product product = new Product();
+        product.setProductName("");
         product.setProductQuantity(2);
 
         assertNull(productService.update(product));
