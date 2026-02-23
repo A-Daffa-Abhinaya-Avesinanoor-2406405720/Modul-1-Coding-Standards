@@ -57,5 +57,7 @@ class CreateProductFunctionalTest {
 
         int quantityValue = Integer.parseInt(quantityText);
         assertTrue(quantityValue > 0);
+
+
     }
 }
