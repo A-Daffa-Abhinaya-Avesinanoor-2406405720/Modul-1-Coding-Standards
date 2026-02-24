@@ -55,6 +55,11 @@ sonarqube {
         property("sonar.projectKey", "A-Daffa-Abhinaya-Avesinanoor-2406405720_Modul-1-Coding-Standards")
         property("sonar.organization", "a-daffa-abhinaya-avesinanoor-2406405720")
         property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.sources", "src/main/java")
+        property("sonar.tests", "src/test/java")
+        property("sonar.java.binaries", "${project.layout.buildDirectory.get()}/classes")
+        property("sonar.junit.reportPaths", "build/test-results/test")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${project.layout.buildDirectory.get()}/reports/jacoco/test/jacocoTestReport.xml")
     }
 }
 
