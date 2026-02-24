@@ -3,6 +3,7 @@ plugins {
     jacoco
     id("org.springframework.boot") version "4.0.2"
     id("io.spring.dependency-management") version "1.1.7"
+    id("org.sonarqube") version "7.2.2.6593"
 }
 
 val seleniumJavaVersion = "4.14.1"
@@ -47,6 +48,14 @@ dependencies {
     testImplementation("org.mockito:mockito-junit-jupiter:$mockitoVersion")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
+}
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "A-Daffa-Abhinaya-Avesinanoor-2406405720_Modul-1-Coding-Standards")
+        property("sonar.organization", "a-daffa-abhinaya-avesinanoor-2406405720")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
 }
 
 tasks.register<Test>("unitTest") {
