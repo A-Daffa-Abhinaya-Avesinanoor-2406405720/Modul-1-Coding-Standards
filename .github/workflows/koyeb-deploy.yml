@@ -1,0 +1,37 @@
+name: Deploy to Koyeb
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install and configure Koyeb CLI
+        uses: koyeb-community/koyeb-actions@v2
+        with:
+          api_token: ${{ secrets.KOYEB_API_TOKEN }}
+
+      - name: Build and deploy to Koyeb
+        uses: koyeb/action-git-deploy@v1
+        with:
+          app-name: eshop
+          service-name: eshop-web
+          git-url: github.com/${{ github.repository }}
+          git-branch: ${{ github.ref_name }}
+          git-sha: ${{ github.sha }}
+          git-builder: docker
+          git-docker-dockerfile: Dockerfile
+          service-env: SERVER_PORT=8080
+          service-ports: "8080:http"
+          service-routes: "/:8080"
