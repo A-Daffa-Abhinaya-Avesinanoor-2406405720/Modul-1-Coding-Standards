@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout at the Git repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up Java toolchain
         uses: actions/setup-java@v4
         with:
@@ -21,3 +23,8 @@ jobs:
         run: chmod +x ./gradlew
       - name: Run unit tests
         run: ./gradlew test
+
+      - name: sonar analyze
+        run: ./gradlew sonar
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
