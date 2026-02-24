@@ -1,3 +1,6 @@
+<details>
+<summary>Modul 1</summary>
+
 # Refleksi 1
 
 Saya sudah menerapkan clean code dengan menerapkan penamaan kelas, method, dan variabel yang deskriptif dan memfokuskan method pada suatu tugas sehingga mudah dipahami dan di-maintain untuk kedepannya. Saya juga menerapkan konsistensi penamaan dan pemisahan concern. Menurut saya, source code yang diberikan memiliki kekurangan karena belum ada validasi input, misalnya pada variable productQuantity. Saya menambahkan validasi ketika input productQuantity pada CreateProduct.html supaya jumlahnya harus integer positif dengan menambahkan method validasi di ProductServiceImpl.java dan memunculkan pesan error jika tidak valid di ProductController.java.
@@ -7,3 +10,21 @@ Saya sudah menerapkan clean code dengan menerapkan penamaan kelas, method, dan v
 Menurut saya, jumlah unit test di suatu kelas tidak ditentukan angka coverage, tetapi yang penting mencakup skenario utama, edge case, dan kondisi gagal. Kecukupan test bisa dibantu dengan code coverage, namun coverage tinggi hanya menunjukkan baris yang dijalankan, bukan jaminan kodenya bebas bug atau logikanya. Jadi 100% coverage tetap bisa memiliki error jika assert-nya lemah atau skenario penting belum diuji.
 
 Jika membuat functional test baru untuk menghitung jumlah item list dengan setup yang sama seperti test sebelumnya, codenya bisa tidak jadi clean code karena banyak duplikat dan magic string. Hal ini membuat code sulit di-maintain ketika UI berubah, dan meningkatkan risiko timing, element selector atau delay. Fix yang bisa dilakukan adalah membuat helper method atau Page Object untuk setup atau menyimpan URL dalam constant, dan menggunakan explicit wait yang konsisten. Dengan cara itu, kode test bisa lebih menjadi clean code.
+</details>
+
+<details>
+<summary>Modul 2</summary>
+
+# Refleksi 1
+
+Masalah code quality yang saya perbaiki adalah validasi input pada fitur produk, khususnya pada name dan quantity. Sebelumnya, nama produk bisa null atau hanya spasi, dan quantity bisa nol atau negatif sehingga data tidak valid. Saya menambahkan validasi di serviceimpl, lalu menampilkan pesan error dengan controller ketika validasi gagal. Selain itu say memperbaiki issue mengenai code scanning alerts dari scorecard mengenai `Token-Permissions: no top level permission defined` pad `ci.yml` dan `sonarcloud.yml` dengan menambahkan
+```yml
+permissions:
+  contents: read
+```
+
+# Refleksi 2
+
+Menurut saya, workflow CI saat ini sudah memenuhi definisi Continuous Integration karena pipeline-nya otomatis menjalankan build dan unit test setiap ada push atau pull request. Untuk Continuous Deployment, workflow deploy ke Koyeb berjalan otomatis saat ada push ke branch main, jadi ini sudah termasuk CD karena tidak perlu deploy manual. Jadi, CI dan CD berjalan dengan baik.
+
+</details>
