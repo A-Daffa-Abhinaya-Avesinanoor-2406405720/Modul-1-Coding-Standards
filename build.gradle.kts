@@ -94,4 +94,13 @@ tasks.test {
 
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}
+
+tasks.sonarqube {
+    dependsOn(tasks.test)
+    dependsOn(tasks.jacocoTestReport)
 }
