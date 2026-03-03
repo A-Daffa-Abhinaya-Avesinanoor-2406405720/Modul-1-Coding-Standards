@@ -2,9 +2,11 @@ package id.ac.ui.cs.advprog.eshop.service;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.repository.ProductRepository;
+import id.ac.ui.cs.advprog.eshop.validation.ProductNameValidator;
+import id.ac.ui.cs.advprog.eshop.validation.ProductQuantityValidator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -27,8 +29,15 @@ class ProductServiceImplTest {
     @Mock
     private ProductRepository productRepository;
 
-    @InjectMocks
     private ProductServiceImpl productService;
+
+    @BeforeEach
+    void setUp() {
+        productService = new ProductServiceImpl(
+                productRepository,
+                List.of(new ProductNameValidator(), new ProductQuantityValidator())
+        );
+    }
 
     @Test
     void create_whenProductNull_returnsNull() {

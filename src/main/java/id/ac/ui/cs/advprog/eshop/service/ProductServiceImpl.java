@@ -12,11 +12,14 @@ import java.util.Objects;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final List<ProductValidator> validators;
 
     @Autowired
-    private List<ProductValidator> validators;
+    public ProductServiceImpl(ProductRepository productRepository, List<ProductValidator> validators) {
+        this.productRepository = productRepository;
+        this.validators = validators;
+    }
 
     @Override
     public Product create(Product product) {
