@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProductRepositoryEditDeleteTest {
 
-    private ProductRepository productRepository;
+    private ProductRepositoryImpl productRepository;
 
     @BeforeEach
     void setUp() {
-        productRepository = new ProductRepository();
+        productRepository = new ProductRepositoryImpl();
     }
 
     @Test
