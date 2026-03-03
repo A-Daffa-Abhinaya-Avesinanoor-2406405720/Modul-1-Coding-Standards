@@ -75,10 +75,8 @@ public class ProductController {
 class CarController extends ProductController {
     @Autowired
     private CarServiceImpl carservice;
-    @Autowired
-    private CarService carService;
 
-    @GetMapping("/createcar")
+    @GetMapping("/createCar")
     public String createCarPage(Model model) {
         Car car = new Car();
         model.addAttribute("car", car);
@@ -86,6 +84,12 @@ class CarController extends ProductController {
     }
 
     @PostMapping("/createCar")
+    public String createCarPost(@ModelAttribute Car car,Model model){
+        carservice.create(car);
+        return "redirect:listCar";
+    }
+
+    @GetMapping("/listCar")
     public String carListPage(Model model) {
         List<Car> allCars = carservice.findAll();
         model.addAttribute("cars", allCars);
