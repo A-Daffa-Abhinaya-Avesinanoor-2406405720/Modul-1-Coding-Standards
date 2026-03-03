@@ -1,11 +1,13 @@
 package id.ac.ui.cs.advprog.eshop.service;
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.repository.ProductRepository;
+import id.ac.ui.cs.advprog.eshop.validation.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -13,15 +15,15 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private List<ProductValidator> validators;
+
     @Override
     public Product create(Product product) {
         if (product == null) {
             return null;
         }
-        if (!isValidName(product.getProductName())) {
-            return null;
-        }
-        if (!isValidQuantity(product.getProductQuantity())) {
+        if (!isValid(product)) {
             return null;
         }
         productRepository.create(product);
@@ -46,10 +48,7 @@ public class ProductServiceImpl implements ProductService {
         if (product == null) {
             return null;
         }
-        if (!isValidName(product.getProductName())) {
-            return null;
-        }
-        if (!isValidQuantity(product.getProductQuantity())) {
+        if (!isValid(product)) {
             return null;
         }
         return productRepository.update(product);
@@ -60,12 +59,10 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.deleteById(productId);
     }
 
-    private boolean isValidName(String productName) {
-        return productName != null && !productName.trim().isEmpty();
-    }
-
-    private boolean isValidQuantity(int productQuantity) {
-        return productQuantity > 0;
+    private boolean isValid(Product product) {
+        return validators.stream()
+                .filter(Objects::nonNull)
+                .allMatch(validator -> validator.isValid(product));
     }
 
 }
