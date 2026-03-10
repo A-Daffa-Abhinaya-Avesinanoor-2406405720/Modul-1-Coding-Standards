@@ -14,8 +14,7 @@ public class PaymentRepository {
         int index = 0;
         for (Payment savedPayment : paymentData) {
             if (savedPayment.getId().equals(payment.getId())) {
-                paymentData.remove(index);
-                paymentData.add(index, payment);
+                paymentData.set(index, payment);
                 return payment;
             }
             index += 1;
@@ -35,6 +34,6 @@ public class PaymentRepository {
     }
 
     public List<Payment> findAll() {
-        return paymentData;
+        return new ArrayList<>(paymentData);
     }
 }
