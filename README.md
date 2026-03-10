@@ -98,3 +98,35 @@ Kekurangan tidak menerapkan SOLID:
   Module tingkat tinggi terlalu bergantung ke detail sehingga sulit diganti dan di-test. Contoh: `ProductServiceImpl` langsung membuat `ProductRepositoryImpl` sehingga unit test perlu database asli.
 
 </details>
+
+<details>
+<summary>Modul 4</summary>
+
+# Refleksi 1
+Menurut saya, alur TDD pada modul ini berguna, terutama saat membangun fitur `Order` dari nol. Alur pengerjaannya terstruktur: membuat test repository (`save`, `findById`, `findAllByAuthor`), implementasi supaya lolos test, lalu lanjut ke service dengan mock repository. Dengan pola ini, saya tidak menebak-nebak kebutuhan kode karena fungsinya sudah didefinisikan oleh test terlebih dahulu (Test Driven Development)
+
+Berdasarkan Percival (2017) pada bagian *Evaluating Your Testing Objectives*:
+- Apakah test membantu mencegah regression? Ya, karena setiap perubahan di `OrderRepository` dan `OrderServiceImpl` langsung tervalidasi oleh test yang sudah ada.
+- Apakah test membantu desain kode? Ya, terutama dalam pemisahan responsibility antara repository dan service, serta penetapan behavior pada kasus valid dan invalid.
+- Apakah test yang dibuat sudah menguji behavior penting, bukan hanya implementasi? Sebagian besar iya (contoh: duplicate ID, invalid status, order tidak ditemukan), walau masih ada ruang perbaikan.
+- Apakah feedback loop cepat? Cukup cepat karena sebagian besar test adalah unit test tanpa dependency eksternal.
+
+Yang perlu saya tingkatkan pada pengerjaan berikutnya:
+- Menambah edge case yang belum diuji, misalnya input `null` pada `orderId`, `author`, atau `status`.
+- Mengurangi duplikasi setup data test dengan helper/factory agar test lebih maintainable.
+
+# Refleksi 2
+Menurut saya, unit test yang saya buat mengikuti prinsip F.I.R.S.T., tetapi belum sempurna.
+
+- **Fast**: Terpenuhi. Test berjalan cepat karena berbasis unit test dan mock, tanpa database/network.
+- **Independent**: Sebagian besar terpenuhi. Tiap test punya setup sendiri, tetapi masih ada pola data fixture yang serupa di banyak test yang bisa dirapikan agar tidak saling bergantung secara implisit.
+- **Repeatable**: Terpenuhi. Hasil test konsisten ketika dijalankan berulang di environment yang sama.
+- **Self-Validating**: Terpenuhi. Test menggunakan assertion (`assertEquals`, `assertNull`, `assertThrows`) sehingga hasil pass/fail otomatis dan jelas.
+- **Timely**: Cukup terpenuhi. Test ditulis sebelum/bersamaan dengan implementasi pada alur TDD, walau pada beberapa langkah saya masih mengikuti contoh tutorial sehingga belum sepenuhnya eksploratif dari requirement sendiri.
+
+Perbaikan untuk test berikutnya:
+- Membuat nama test lebih deskriptif
+- Menambah negative test untuk boundary dan null-safety.
+- Mengurangi duplikasi data setup melalui method util
+- Memastikan setiap test hanya memverifikasi satu behavior utama.
+</details>
