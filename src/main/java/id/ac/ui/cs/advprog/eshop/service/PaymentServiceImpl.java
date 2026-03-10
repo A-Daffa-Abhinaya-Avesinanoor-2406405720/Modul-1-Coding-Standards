@@ -13,44 +13,15 @@ import java.util.UUID;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
+    private static final String STATUS_SUCCESS = "SUCCESS";
+    private static final String STATUS_REJECTED = "REJECTED";
+
     @Autowired
     private PaymentRepository paymentRepository;
 
     @Override
     public Payment addPayment(Order order, String method, Map<String, String> paymentData) {
-        String status = "REJECTED";
-
-        if ("Voucher Code".equals(method)) {
-            String voucherCode = paymentData == null ? null : paymentData.get("voucherCode");
-            boolean isValid = voucherCode != null
-                    && voucherCode.length() == 16
-                    && voucherCode.startsWith("ESHOP");
-
-            if (isValid) {
-                int numericCount = 0;
-                for (char current : voucherCode.toCharArray()) {
-                    if (Character.isDigit(current)) {
-                        numericCount += 1;
-                    }
-                }
-                if (numericCount == 8) {
-                    status = "SUCCESS";
-                }
-            }
-        } else if ("Bank Transfer".equals(method)) {
-            String bankName = paymentData == null ? null : paymentData.get("bankName");
-            String referenceCode = paymentData == null ? null : paymentData.get("referenceCode");
-            if (bankName != null && !bankName.isBlank() && referenceCode != null && !referenceCode.isBlank()) {
-                status = "SUCCESS";
-            }
-        } else if ("Cash on Delivery".equals(method)) {
-            String address = paymentData == null ? null : paymentData.get("address");
-            String deliveryFee = paymentData == null ? null : paymentData.get("deliveryFee");
-            if (address != null && !address.isBlank() && deliveryFee != null && !deliveryFee.isBlank()) {
-                status = "SUCCESS";
-            }
-        }
-
+        String status = evaluateStatus(method, paymentData);
         Payment payment = new Payment(UUID.randomUUID().toString(), order, method, status, paymentData);
         paymentRepository.save(payment);
         return payment;
@@ -59,9 +30,9 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment setStatus(Payment payment, String status) {
         payment.setStatus(status);
-        if ("SUCCESS".equals(status)) {
+        if (STATUS_SUCCESS.equals(status)) {
             payment.getOrder().setStatus(OrderStatus.SUCCESS.getValue());
-        } else if ("REJECTED".equals(status)) {
+        } else if (STATUS_REJECTED.equals(status)) {
             payment.getOrder().setStatus(OrderStatus.FAILED.getValue());
         }
         return payment;
@@ -75,5 +46,67 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public List<Payment> getAllPayments() {
         return paymentRepository.findAll();
+    }
+
+    private String evaluateStatus(String method, Map<String, String> paymentData) {
+        if (method == null) {
+            return STATUS_REJECTED;
+        }
+
+        String normalizedMethod = method.trim().toUpperCase();
+        if (normalizedMethod.contains("VOUCHER")) {
+            return isVoucherValid(paymentData) ? STATUS_SUCCESS : STATUS_REJECTED;
+        }
+        if (normalizedMethod.contains("BANK")) {
+            return isBankTransferDataValid(paymentData) ? STATUS_SUCCESS : STATUS_REJECTED;
+        }
+        if (normalizedMethod.contains("CASH") || normalizedMethod.contains("DELIVERY")) {
+            return isCashOnDeliveryDataValid(paymentData) ? STATUS_SUCCESS : STATUS_REJECTED;
+        }
+        return STATUS_REJECTED;
+    }
+
+    private boolean isVoucherValid(Map<String, String> paymentData) {
+        String voucherCode = getDataValue(paymentData, "voucherCode");
+        if (voucherCode == null) {
+            return false;
+        }
+        if (voucherCode.length() != 16) {
+            return false;
+        }
+        if (!voucherCode.startsWith("ESHOP")) {
+            return false;
+        }
+
+        int numericCount = 0;
+        for (char current : voucherCode.toCharArray()) {
+            if (Character.isDigit(current)) {
+                numericCount += 1;
+            }
+        }
+        return numericCount == 8;
+    }
+
+    private boolean isBankTransferDataValid(Map<String, String> paymentData) {
+        String bankName = getDataValue(paymentData, "bankName");
+        String referenceCode = getDataValue(paymentData, "referenceCode");
+        return bankName != null && referenceCode != null;
+    }
+
+    private boolean isCashOnDeliveryDataValid(Map<String, String> paymentData) {
+        String address = getDataValue(paymentData, "address");
+        String deliveryFee = getDataValue(paymentData, "deliveryFee");
+        return address != null && deliveryFee != null;
+    }
+
+    private String getDataValue(Map<String, String> paymentData, String key) {
+        if (paymentData == null) {
+            return null;
+        }
+        String value = paymentData.get(key);
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        return value;
     }
 }
